@@ -12,7 +12,7 @@ const Hub = () => {
                     <CardTitle className="text-heading-2 font-medium text-center mb-10">Bienvenido al menú del T.P. N° 2</CardTitle>
                     <CardDescription className="text-center text-body-1 mb-10 flex flex-row">
                         <Link to={'base-conversion'} className='w-full'>
-                            <Card className="min-w-[75%] h-fit mx-auto flex justify-center gap-1 overflow-visible cursor-pointer !bg-metal-700 hover:!bg-metal-800">
+                            <Card className="transition duration-150 min-w-[75%] h-fit mx-auto flex justify-center gap-1 overflow-visible cursor-pointer !bg-metal-700 hover:!bg-metal-800">
                                 <CardContent>
                                     <CardTitle className="text-heading-5 font-medium text-center mb-10">Conversión de Bases Numéricas</CardTitle>
                                     <CardDescription className="text-center text-body-1 mb-10 flex flex-row">
