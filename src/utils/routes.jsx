@@ -2,19 +2,21 @@ import { Route } from "react-router-dom";
 import { PlaceholderComponent } from "../components/placeholder/PlaceholderComponent";
 import React from "react";
 import { Bug, DotsNine, Function, MathOperations, Radical } from "phosphor-react";
+import BaseConversion from "../pages/tp2/BaseConversion";
+import Hub from "../pages/tp2/Hub";
 
 const routes = [
     {
         path: "error-theory",
         name: "T.P. N°2: Introducción a la Teoría del Error",
         icon: <Bug size={22} />,
-        component: <PlaceholderComponent />,
+        component: <Hub />,
         innerRoutes: [
             {
                 path: "base-conversion",
                 name: "Conversión de Bases Numéricas",
                 icon: <DotsNine size={22} />,
-                component: <PlaceholderComponent />,
+                component: <BaseConversion />,
             }
         ]
     },
