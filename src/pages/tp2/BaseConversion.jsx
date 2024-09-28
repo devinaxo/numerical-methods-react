@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { convertWithPrecision } from './methods';
 import { Button, Card, CardContent, CardDescription, CardTitle, Input, Label } from 'keep-react';
 import StyledSelect from '../../components/select/StyledSelect';
+import { ArrowLeft } from 'phosphor-react';
+import { Link } from 'react-router-dom';
 
 const BaseConversion = () => {
 
@@ -30,7 +32,7 @@ const BaseConversion = () => {
     ];
 
     const handleConversion = () => {
-        if(!num || !t) return;
+        if (!num || !t) return;
         const result = convertWithPrecision(num, fromBase, toBase, t);
         setResult(result);
         console.log(result);
@@ -38,6 +40,9 @@ const BaseConversion = () => {
 
     return (
         <div>
+            <Link to={'../error-theory'}>
+                <Button className='bg-green-700 hover:bg-green-800'> <ArrowLeft size={28} /> Volver</Button>
+            </Link>
             <Card className="min-w-[75%] h-fit mx-auto flex justify-center gap-1 overflow-visible">
                 <CardContent>
                     <CardTitle className="text-heading-2 font-medium text-center mb-10">Conversión de Bases Numéricas</CardTitle>
@@ -82,30 +87,35 @@ const BaseConversion = () => {
                         </div>
                         <div className='w-3/5'>
                             <div className='w-[90%] h-full flex flex-col mx-auto gap-2'>
-                                <div className='w-full h-1/3 border border-metal-800 rounded-lg p-2'>
-                                    <p className='text-sm font-bold'>Número completo (sin normalizar): </p>
-                                    <p className='text-sm'>{result?.fullNumber}</p>
+                                <div className='w-[90%] h-full flex flex-col mx-auto gap-2'>
+                                    <div className='w-full h-auto border border-metal-800 rounded-lg p-2 break-all whitespace-normal overflow-hidden'>
+                                        <p className='text-sm font-bold'>Número completo (sin normalizar): </p>
+                                        <div className="w-fit">
+                                            <p className='text-sm'>{result?.fullNumber}</p>
+                                        </div>
+                                    </div>
+                                    <div className='w-full h-auto border border-metal-800 rounded-lg p-2 break-all whitespace-normal overflow-hidden'>
+                                        <p className='text-sm font-bold'>Número completo (normalizado): </p>
+                                        <p className='text-sm'>{result?.normalizedFull}</p>
+                                    </div>
+                                    <div className='w-full h-auto border border-metal-800 rounded-lg p-2 break-all whitespace-normal overflow-hidden'>
+                                        <p className='text-sm font-bold'>Número por corte (sin normalizar): </p>
+                                        <p className='text-sm'>{result?.nonNormalizedCutOff}</p>
+                                    </div>
+                                    <div className='w-full h-auto border border-metal-800 rounded-lg p-2 break-all whitespace-normal overflow-hidden'>
+                                        <p className='text-sm font-bold'>Número por corte (normalizado): </p>
+                                        <p className='text-sm'>{result?.normalizedCutOff}</p>
+                                    </div>
+                                    <div className='w-full h-auto border border-metal-800 rounded-lg p-2 break-all whitespace-normal overflow-hidden'>
+                                        <p className='text-sm font-bold'>Número por redondeo simétrico (sin normalizar): </p>
+                                        <p className='text-sm'>{result?.nonNormalizedRounded}</p>
+                                    </div>
+                                    <div className='w-full h-auto border border-metal-800 rounded-lg p-2 break-all whitespace-normal overflow-hidden'>
+                                        <p className='text-sm font-bold'>Número por redondeo simétrico (normalizado): </p>
+                                        <p className='text-sm'>{result?.normalizedRounded}</p>
+                                    </div>
                                 </div>
-                                <div className='w-full h-1/3 border border-metal-800 rounded-lg p-2'>
-                                    <p className='text-sm font-bold'>Número completo (normalizado): </p>
-                                    <p className='text-sm'>{result?.normalizedFull}</p>
-                                </div>
-                                <div className='w-full h-1/3 border border-metal-800 rounded-lg p-2'>
-                                    <p className='text-sm font-bold'>Número por corte (sin normalizar): </p>
-                                    <p className='text-sm'>{result?.nonNormalizedCutOff}</p>
-                                </div>
-                                <div className='w-full h-1/3 border border-metal-800 rounded-lg p-2'>
-                                    <p className='text-sm font-bold'>Número por corte (normalizado): </p>
-                                    <p className='text-sm'>{result?.normalizedCutOff}</p>
-                                </div>
-                                <div className='w-full h-1/3 border border-metal-800 rounded-lg p-2'>
-                                    <p className='text-sm font-bold'>Número por redondeo simétrico (sin normalizar): </p>
-                                    <p className='text-sm'>{result?.nonNormalizedRounded}</p>
-                                </div>
-                                <div className='w-full h-1/3 border border-metal-800 rounded-lg p-2'>
-                                    <p className='text-sm font-bold'>Número por redondeo simétrico (normalizado): </p>
-                                    <p className='text-sm'>{result?.normalizedRounded}</p>
-                                </div>
+
                             </div>
                         </div>
                     </CardDescription>

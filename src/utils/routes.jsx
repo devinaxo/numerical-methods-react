@@ -27,8 +27,14 @@ const routes = [
         component: <PlaceholderComponent />,
         innerRoutes: [
             {
-                path: "placeholder",
-                name: "placeholder",
+                path: "simple-root",
+                name: "Calcular raíz simple de una función",
+                icon: <DotsNine size={22} />,
+                component: <PlaceholderComponent />,
+            },
+            {
+                path: "compare-methods",
+                name: "Comparar métodos de resolución",
                 icon: <DotsNine size={22} />,
                 component: <PlaceholderComponent />,
             }

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardTitle } from 'keep-react';
+import { Button, Card, CardContent, CardDescription, CardTitle } from 'keep-react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'phosphor-react';
 
 
 const Hub = () => {
 
     return (
         <div>
+            <Link to={'../'}>
+                <Button className='bg-green-700 hover:bg-green-800'> <ArrowLeft size={28} /> Volver</Button>
+            </Link>
             <Card className="min-w-[75%] h-fit mx-auto flex justify-center gap-1 overflow-visible">
                 <CardContent>
                     <CardTitle className="text-heading-2 font-medium text-center mb-10">Bienvenido al menú del T.P. N° 2</CardTitle>
