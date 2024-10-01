@@ -4,9 +4,12 @@ import StyledSelect from '../../components/select/StyledSelect';
 import { ArrowLeft } from 'phosphor-react';
 import { Link } from 'react-router-dom';
 import DesmosPlotter from './DesmosPlotter';
-import { Bisection } from './methods/open/Bisection';
-import { RegulaFalsi } from './methods/open/RegulaFalsi';
-import { RegulaFalsiMod } from './methods/open/RegulaFalsiMod';
+import { Bisection } from './methods/closed/Bisection';
+import { RegulaFalsi } from './methods/closed/RegulaFalsi';
+import { RegulaFalsiMod } from './methods/closed/RegulaFalsiMod';
+import { NewtonRaphson } from './methods/open/NewtonRaphson';
+import { Secant } from './methods/open/Secant';
+import { Halley } from './methods/open/Halley';
 
 const SimpleRoot = () => {
 
@@ -51,16 +54,17 @@ const SimpleRoot = () => {
             setErrors({ ...errors, interval: 'Ingrese un intervalo válido' });
             isValid = false;
         }
-        if (method.category === 'abierto' && !initialValue) {
+        if (method.category === 'abierto' && !initialValue && method.value !== 'secant') {
             setErrors({ ...errors, initialValue: 'Ingrese un valor inicial válido' });
             isValid = false;
         }
-        
+
         if (isValid) {
             console.log('Begin Interval:', beginInterval);
             console.log('End Interval:', endInterval);
             console.log('Tolerance:', t);
-            
+            console.log('Initial Value:', initialValue);
+
             let resultData = null;
             switch (method.value) {
                 case 'bisection':
@@ -72,19 +76,28 @@ const SimpleRoot = () => {
                 case 'false-position-mod':
                     resultData = RegulaFalsiMod(expression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
+                case 'newton':
+                    resultData = NewtonRaphson(expression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'secant':
+                    resultData = Secant(expression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'halley':
+                    resultData = Halley(expression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    break;
             }
-            
+
             if (resultData) {
                 setResult(resultData);
                 console.log('Result set to:', resultData);
             }
         }
     };
-    
+
     React.useEffect(() => {
         console.log('Updated Result:', result);
     }, [result]);
-    
+
 
     return (
         <div>
@@ -97,7 +110,8 @@ const SimpleRoot = () => {
                     <CardDescription className="text-center text-body-1 mb-10 flex flex-row">
                         <div className='w-2/5 mx-6'>
                             <fieldset className='w-full my-2'>
-                                <Label>Ingrese su función</Label>
+                                <Label>Ingrese su función</Label> <br />
+                                <Label className='text-xs'>(para ingresar exponentes del número de Euler, use la función "exp(_)" donde en el argumento ingresará la potencia deseada)</Label>
                                 <Input
                                     placeholder='Funcion a evaluar'
                                     type='text'
@@ -133,7 +147,7 @@ const SimpleRoot = () => {
                                 </Input>
                                 <Label className='text-red-500'>{errors?.iterations}</Label>
                             </fieldset>
-                            {method.category === 'abierto' &&
+                            {method.category === 'abierto' && method.value !== 'secant' &&
                                 <fieldset className='w-full my-2'>
                                     <Label>Ingrese su X inicial</Label>
                                     <Input
@@ -144,7 +158,7 @@ const SimpleRoot = () => {
                                     </Input>
                                     <Label className='text-red-500'>{errors?.initialValue}</Label>
                                 </fieldset>}
-                            {method.category === 'cerrado' &&
+                            {(method.category === 'cerrado' || method.value === 'secant') &&
                                 <fieldset className='w-full my-2'>
                                     <Label>Ingrese el intervalo a chequear</Label>
                                     <div className='flex flex-row gap-3'>
@@ -165,7 +179,7 @@ const SimpleRoot = () => {
                                 </fieldset>}
                         </div>
                         <div className='w-3/5'>
-                            <div className='w-full h-full flex flex-col mx-auto gap-2'>
+                            <div className='w-full h-full flex flex-col mx-auto gap-2 my-5'>
                                 <DesmosPlotter expression={expression} />
                             </div>
                         </div>
