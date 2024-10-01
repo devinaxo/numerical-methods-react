@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'phosphor-react';
 
 
-const Hub = () => {
+const HubTP2 = () => {
 
     return (
         <div>
@@ -35,4 +35,4 @@ const Hub = () => {
     );
 };
 
-export default Hub;
+export default HubTP2;
