@@ -6,6 +6,7 @@ import BaseConversion from "../pages/tp2/BaseConversion";
 import HubTP2 from "../pages/tp2/HubTP2";
 import HubTP3 from "../pages/tp3/HubTP3";
 import SimpleRoot from "../pages/tp3/SimpleRoot";
+import CompareMethods from "../pages/tp3/CompareMethods";
 
 const routes = [
     {
@@ -38,7 +39,7 @@ const routes = [
                 path: "compare-methods",
                 name: "Comparar métodos de resolución",
                 icon: <DotsNine size={22} />,
-                component: <PlaceholderComponent />,
+                component: <CompareMethods />,
             }
         ]
     },

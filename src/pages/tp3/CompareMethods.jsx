@@ -6,16 +6,18 @@ import { Link } from 'react-router-dom';
 import DesmosPlotter from './DesmosPlotter';
 import { Bisection, Halley, NewtonRaphson, RegulaFalsi, RegulaFalsiMod, Secant } from './methods';
 
-const SimpleRoot = () => {
+const CompareMethods = () => {
 
     const [expression, setExpression] = useState('x^2');
-    const [method, setMethod] = useState('');
+    const [method1, setMethod1] = useState('');
+    const [method2, setMethod2] = useState('');
     const [t, setT] = useState('');
     const [iterations, setIterations] = useState('');
     const [initialValue, setInitialValue] = useState('');
     const [beginInterval, setBeginInterval] = useState('');
     const [endInterval, setEndInterval] = useState('');
-    const [result, setResult] = useState(null);
+    const [result1, setResult1] = useState(null);
+    const [result2, setResult2] = useState(null);
     const [errors, setErrors] = useState({});
 
     const methodsOptions = [
@@ -68,8 +70,8 @@ const SimpleRoot = () => {
         let isValid = true;
         let newErrors = {};
         if (!expression) return;
-        if (!method) {
-            newErrors.method = '(!) Seleccione un método de cálculo';
+        if (!method1 || !method2) {
+            newErrors.method = '(!) Seleccione los métodos de cálculo';
             isValid = false;
         }
         if (!iterations) {
@@ -80,11 +82,11 @@ const SimpleRoot = () => {
             newErrors.t = '(!) Ingrese un valor de precisión válido';
             isValid = false;
         }
-        if (method.category === 'cerrado' && ((!beginInterval || !endInterval) || (beginInterval > endInterval))) {
+        if ((method1.category === 'cerrado' || method2.category === 'cerrado') && ((!beginInterval || !endInterval) || (beginInterval > endInterval))) {
             newErrors.interval = '(!) Ingrese un intervalo válido';
             isValid = false;
         }
-        if (method.category === 'abierto' && !initialValue && method.value !== 'secant') {
+        if ((method1.category === 'abierto' || method2.category === 'abierto') && !initialValue && (method1.value !== 'secant' || method2.value !== 'secant')) {
             newErrors.initialValue = '(!) Ingrese un valor inicial válido';
             isValid = false;
         }
@@ -96,38 +98,67 @@ const SimpleRoot = () => {
             const mathJsExpression = transformExpressionForMathJs(expression);
             console.log('Transformed Expression for Math.js:', mathJsExpression);
 
-            let resultData = null;
-            switch (method.value) {
+            let resultData1 = null;
+            let resultData2 = null;
+            switch (method1.value) {
                 case 'bisection':
-                    resultData = Bisection(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData1 = Bisection(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'false-position':
-                    resultData = RegulaFalsi(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData1 = RegulaFalsi(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'false-position-mod':
-                    resultData = RegulaFalsiMod(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData1 = RegulaFalsiMod(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'newton':
-                    resultData = NewtonRaphson(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    resultData1 = NewtonRaphson(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'secant':
-                    resultData = Secant(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData1 = Secant(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'halley':
-                    resultData = Halley(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    resultData1 = Halley(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    break;
+            }
+            switch (method2.value) {
+                case 'bisection':
+                    resultData2 = Bisection(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'false-position':
+                    resultData2 = RegulaFalsi(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'false-position-mod':
+                    resultData2 = RegulaFalsiMod(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'newton':
+                    resultData2 = NewtonRaphson(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'secant':
+                    resultData2 = Secant(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    break;
+                case 'halley':
+                    resultData2 = Halley(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
                     break;
             }
 
-            if (resultData) {
-                setResult(resultData);
-                console.log('Result set to:', resultData);
+            if (resultData1 && resultData2) {
+                setResult1(resultData1);
+                setResult2(resultData2);
+                console.log('Result1 set to:', resultData1);
+                console.log('Result2 set to:', resultData2);
             }
         }
     };
 
     useEffect(() => {
-        console.log('Updated Result:', result);
-    }, [result]);
+        console.log('Updated Result1:', result1);
+        console.log('Updated Result2:', result2);
+    }, [result1, result2]);
+
+    useEffect(() => {
+        console.log('Method1:', method1);
+        console.log('Method2', method2);
+    }, [method1, method2]);
 
 
     return (
@@ -137,7 +168,7 @@ const SimpleRoot = () => {
             </Link>
             <Card className="min-w-[85%] h-fit mx-auto flex justify-center gap-1 overflow-visible">
                 <CardContent className='w-full'>
-                    <CardTitle className="text-heading-2 font-medium text-center mb-10">Calculadora de raíces simples</CardTitle>
+                    <CardTitle className="text-heading-2 font-medium text-center mb-10">Comparar métodos de resolución</CardTitle>
                     <CardDescription className="text-center text-body-1 mb-10 flex flex-row">
                         <div className='w-2/5 mx-6'>
                             <fieldset className='w-full my-2'>
@@ -150,19 +181,29 @@ const SimpleRoot = () => {
                                 </Input>
                             </fieldset>
                             <fieldset className='w-full my-2'>
-                                <Label>Método a utilizar</Label> <br />
-                                <StyledSelect
-                                    placeholder='Seleccione el método de cálculo'
-                                    options={methodsOptions}
-                                    value={methodsOptions.find(option => option.value === method)}
-                                    onChange={(selectedOption) => setMethod(selectedOption)}>
-                                </StyledSelect>
+                                <Label>Métodos a utilizar</Label> <br />
+                                <div className='flex flex-row justify-between gap-4'>
+                                    <StyledSelect
+                                        className='w-1/2'
+                                        placeholder='Seleccione'
+                                        options={methodsOptions}
+                                        value={methodsOptions.find(option => option.value === method1)}
+                                        onChange={(selectedOption) => setMethod1(selectedOption)}>
+                                    </StyledSelect>
+                                    <StyledSelect
+                                        className='w-1/2'
+                                        placeholder='Seleccione'
+                                        options={methodsOptions}
+                                        value={methodsOptions.find(option => option.value === method2)}
+                                        onChange={(selectedOption) => setMethod2(selectedOption)}>
+                                    </StyledSelect>
+                                </div>
                                 <Label className='text-red-500'>{errors?.method}</Label>
                             </fieldset>
                             <fieldset className='w-full my-2'>
-                                <Label>Ingrese su epsilon (Є=0.0...1) de precisión deseada</Label>
+                                <Label>Ingrese su epsilon (Є) de precisión deseada</Label>
                                 <Input
-                                    placeholder='Dígitos de precisión (Є)'
+                                    placeholder='Dígitos de precisión (Є=0.0...1)'
                                     type='number'
                                     value={t}
                                     onChange={(e) => setT(e.target.value)}>
@@ -179,7 +220,7 @@ const SimpleRoot = () => {
                                 </Input>
                                 <Label className='text-red-500'>{errors?.iterations}</Label>
                             </fieldset>
-                            {method.category === 'abierto' && method.value !== 'secant' &&
+                            {((method1.category === 'abierto' && method1.value !== 'secant') || (method2.category === 'abierto' && method2.value !== 'secant')) &&
                                 <fieldset className='w-full my-2'>
                                     <Label>Ingrese su X inicial</Label>
                                     <Input
@@ -190,7 +231,7 @@ const SimpleRoot = () => {
                                     </Input>
                                     <Label className='text-red-500'>{errors?.initialValue}</Label>
                                 </fieldset>}
-                            {(method.category === 'cerrado' || method.value === 'secant') &&
+                            {((method1.category === 'cerrado' || method1.value === 'secant') || (method2.category === 'cerrado' || method2.value === 'secant')) &&
                                 <fieldset className='w-full my-2'>
                                     <Label>Ingrese el intervalo a chequear</Label>
                                     <div className='flex flex-row gap-3'>
@@ -219,10 +260,20 @@ const SimpleRoot = () => {
                     <div className="w-full flex justify-center items-center place-content-center mb-8">
                         <Button onClick={handleCalculations} className='bg-green-700 hover:bg-green-800'>Calcular</Button>
                     </div>
-                    {result && (
+                    {result1 && result2 && (
                         <div className="mt-5 text-center text-slate-100 mb-6">
-                            <p><strong>Resultado:</strong> Raíz aproximada: {result.root}</p>
-                            <p><strong>Iteraciones:</strong> {result.iterations}</p>
+                            <div className="flex flex-row justify-around gap-6">
+                                <div>
+                                    <p><strong>Método 1 ({method1.label}):</strong></p>
+                                    <p><strong>Raíz aproximada:</strong> {result1.root}</p>
+                                    <p><strong>Iteraciones:</strong> {result1.iterations}</p>
+                                </div>
+                                <div>
+                                    <p><strong>Método 2 ({method2.label}):</strong></p>
+                                    <p><strong>Raíz aproximada:</strong> {result2.root}</p>
+                                    <p><strong>Iteraciones:</strong> {result2.iterations}</p>
+                                </div>
+                            </div>
                         </div>
                     )}
                     <CardDescription className="text-center text-sm">
@@ -234,4 +285,4 @@ const SimpleRoot = () => {
     );
 };
 
-export default SimpleRoot;
+export default CompareMethods;
