@@ -9,6 +9,8 @@ import SimpleRoot from "../pages/tp3/SimpleRoot";
 import CompareMethods from "../pages/tp3/CompareMethods";
 import HubTP4 from "../pages/tp4/HubTP4";
 import { EvaluatePolynomial } from "../pages/tp4/EvaluatePolynomial";
+import { DividePolynomial } from "../pages/tp4/DividePolynomial";
+import { PossibleRoots } from "../pages/tp4/PossibleRoots";
 
 const routes = [
     {
@@ -61,13 +63,13 @@ const routes = [
                 path: "divide-polynomials",
                 name: "Dividir polinomios",
                 icon: <DotsNine size={22} />,
-                component: <PlaceholderComponent />,
+                component: <DividePolynomial />,
             },
             {
                 path: "possible-roots",
                 name: "Determinar posibles raíces",
                 icon: <DotsNine size={22} />,
-                component: <PlaceholderComponent />,
+                component: <PossibleRoots />,
             },
             {
                 path: "positive-negative-bounds",
