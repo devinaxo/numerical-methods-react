@@ -4,12 +4,7 @@ import StyledSelect from '../../components/select/StyledSelect';
 import { ArrowLeft } from 'phosphor-react';
 import { Link } from 'react-router-dom';
 import DesmosPlotter from './DesmosPlotter';
-import { Bisection } from './methods/closed/Bisection';
-import { RegulaFalsi } from './methods/closed/RegulaFalsi';
-import { RegulaFalsiMod } from './methods/closed/RegulaFalsiMod';
-import { NewtonRaphson } from './methods/open/NewtonRaphson';
-import { Secant } from './methods/open/Secant';
-import { Halley } from './methods/open/Halley';
+import { Bisection, Halley, NewtonRaphson, RegulaFalsi, RegulaFalsiMod, Secant } from './methods';
 
 const SimpleRoot = () => {
 
@@ -42,6 +37,27 @@ const SimpleRoot = () => {
         },
     ];
 
+    const transformExpressionForMathJs = (expression) => {
+        // Replace e^x with exp(x) for math.js
+        let transformedExpression = expression.replace(/e\^([^\s+*/()-]+)/g, 'exp($1)');
+
+        // Replace log(x) with log(10, x) for math.js
+        transformedExpression = transformedExpression.replace(/log\(([^\s+*/()-]+)\)/g, 'log($1, 10)');
+
+        // Replace ln(x) with log(x)
+        transformedExpression = transformedExpression.replace(/\bln\(([^)]+)\)/g, 'log($1)');
+
+        return transformedExpression;
+    };
+
+    const transformExpressionForDesmos = (expression) => {
+        // Replace e^ with e^{} for LaTeX formatting
+        let transformedExpression = expression.replace(/e\^([^\s]+)/g, 'e^{$1}');
+
+        // ln(x) remains as ln(x) in Desmos
+        return transformedExpression;
+    };
+
     const handleCalculations = () => {
         let isValid = true;
         setErrors({});
@@ -60,30 +76,29 @@ const SimpleRoot = () => {
         }
 
         if (isValid) {
-            console.log('Begin Interval:', beginInterval);
-            console.log('End Interval:', endInterval);
-            console.log('Tolerance:', t);
-            console.log('Initial Value:', initialValue);
+            // Transform the expression for math.js
+            const mathJsExpression = transformExpressionForMathJs(expression);
+            console.log('Transformed Expression for Math.js:', mathJsExpression);
 
             let resultData = null;
             switch (method.value) {
                 case 'bisection':
-                    resultData = Bisection(expression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData = Bisection(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'false-position':
-                    resultData = RegulaFalsi(expression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData = RegulaFalsi(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'false-position-mod':
-                    resultData = RegulaFalsiMod(expression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData = RegulaFalsiMod(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'newton':
-                    resultData = NewtonRaphson(expression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    resultData = NewtonRaphson(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'secant':
-                    resultData = Secant(expression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
+                    resultData = Secant(mathJsExpression, parseFloat(beginInterval), parseFloat(endInterval), parseFloat(t), parseFloat(iterations));
                     break;
                 case 'halley':
-                    resultData = Halley(expression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
+                    resultData = Halley(mathJsExpression, parseFloat(initialValue), parseFloat(t), parseFloat(iterations));
                     break;
             }
 
@@ -180,7 +195,7 @@ const SimpleRoot = () => {
                         </div>
                         <div className='w-3/5'>
                             <div className='w-full h-full flex flex-col mx-auto gap-2 my-5'>
-                                <DesmosPlotter expression={expression} />
+                                <DesmosPlotter expression={transformExpressionForDesmos(expression)} />
                             </div>
                         </div>
                     </CardDescription>
