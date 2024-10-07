@@ -7,6 +7,8 @@ import HubTP2 from "../pages/tp2/HubTP2";
 import HubTP3 from "../pages/tp3/HubTP3";
 import SimpleRoot from "../pages/tp3/SimpleRoot";
 import CompareMethods from "../pages/tp3/CompareMethods";
+import HubTP4 from "../pages/tp4/HubTP4";
+import { EvaluatePolynomial } from "../pages/tp4/EvaluatePolynomial";
 
 const routes = [
     {
@@ -47,14 +49,38 @@ const routes = [
         path: "polynomial-roots",
         name: "T.P. N°4: Raíces de Polinomios",
         icon: <Radical size={22} />,
-        component: <PlaceholderComponent />,
+        component: <HubTP4 />,
         innerRoutes: [
             {
-                path: "placeholder",
-                name: "placeholder",
+                path: "evaluate-polynomial",
+                name: "Evaluar polinomio en un punto",
+                icon: <DotsNine size={22} />,
+                component: <EvaluatePolynomial />,
+            },
+            {
+                path: "divide-polynomials",
+                name: "Dividir polinomios",
                 icon: <DotsNine size={22} />,
                 component: <PlaceholderComponent />,
-            }
+            },
+            {
+                path: "possible-roots",
+                name: "Determinar posibles raíces",
+                icon: <DotsNine size={22} />,
+                component: <PlaceholderComponent />,
+            },
+            {
+                path: "positive-negative-bounds",
+                name: "Determinar cotas de raíces positivas y negativas",
+                icon: <DotsNine size={22} />,
+                component: <PlaceholderComponent />,
+            },
+            {
+                path: "find-roots",
+                name: "Encontrar raíces de polinomios",
+                icon: <DotsNine size={22} />,
+                component: <PlaceholderComponent />,
+            },
         ]
     },
     {
